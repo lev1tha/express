@@ -1,0 +1,47 @@
+.selector {
+  margin: 8px 0;
+  position: relative;
+  font-family: Arial, sans-serif;
+}
+
+.selectorHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+}
+
+.selectorHeader:hover {
+  background-color: #eaeaea;
+}
+
+.arrow {
+  font-size: 12px;
+}
+
+.selectorList {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  z-index: 1000;
+}
+
+.selectorItem {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.selectorItem:hover {
+  background-color: #f0f0f0;
+}
