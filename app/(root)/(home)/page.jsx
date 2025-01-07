@@ -3,6 +3,7 @@ import Header from "../../../widgets/header/Header";
 import homeStyle from "./home.module.css";
 import Link from "next/link";
 import Card from "../../../components/card/Card";
+import Footer from "../../../widgets/footer/Footer";
 
 export default function Home() {
   return (
@@ -21,6 +22,7 @@ export default function Home() {
         <div className={homeStyle.card_container}>
           <Card />
         </div>
+        <Footer />
       </div>
     </>
   );

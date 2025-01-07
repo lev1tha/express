@@ -1,0 +1,13 @@
+.footer {
+  margin-top: 20px;
+  width: 100%;
+  background-color: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 15px -3px #0000001a, 0 4px 6px -4px #0000001a;
+  font-family: "Nunito Sans", serif;
+}
+
+.footer > h1 {
+  font-size: 16px;
+}
