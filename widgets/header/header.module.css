@@ -1,0 +1,47 @@
+.header_layout {
+  width: 100%;
+  box-shadow: 0 10px 15px -3px #0000001a, 0 4px 6px -4px #0000001a;
+  border-bottom: 1px solid #e5e7ee;
+  background-color: white;
+}
+
+.header_inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 1152px;
+  margin: 0 auto;
+  max-width: 100%;
+  padding: 26px 16px;
+}
+
+.logo img {
+  width: 120px;
+}
+
+.navigate {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+
+  font-family: "Nunito Sans", serif;
+  font-size: 20px;
+}
+
+.plug {
+  position: relative;
+}
+
+.plug::after {
+  content: "|";
+  font-size: 24px;
+  position: absolute;
+  color: rgb(209 213 219);
+  top: -4px;
+  right: -18px;
+}
+
+.exit {
+  color: rgb(185 28 28);
+}
