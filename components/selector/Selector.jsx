@@ -4,6 +4,7 @@ import styles from "./selector.module.css";
 export default function Selector({
   options,
   placeholder = "Выберите значение",
+  onSelect, 
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -13,6 +14,10 @@ export default function Selector({
   const selectOption = (option) => {
     setSelectedOption(option);
     setIsOpen(false);
+
+    if (onSelect) {
+      onSelect(option);
+    }
   };
 
   return (
