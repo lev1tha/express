@@ -11,33 +11,44 @@ export default function Card() {
         <div className="title">
           <p>Статус посылки</p>
         </div>
-        <hr />
+        <hr style={{ margin: "0.375rem 0" }} />
         <div className={cardStyle.box}>
-          <div className={cardStyle.status_img}></div>
+          <div className={cardStyle.status_img}>
+            <img src="" alt="" />
+          </div>
           <div className={cardStyle.text_date}>
             <p className={cardStyle.text}>Дата регистрации клиентом</p>
             <p className={cardStyle.date}>25.12.2024 22:22</p>
           </div>
         </div>
-        <hr />
+        <hr style={{ margin: "0.375rem 0" }} />
+
         <div className={cardStyle.box}>
-          <div className={cardStyle.status_img}></div>
+          <div className={cardStyle.status_img}>
+            <img src="" alt="" />
+          </div>
           <div className={cardStyle.text_date}>
             <p className={cardStyle.text}>Склад в Китае</p>
             <p className={cardStyle.date}>Нету данных</p>
           </div>
         </div>
-        <hr />
+        <hr style={{ margin: "0.375rem 0", borderColor: "#E5E7EB" }} />
+
         <div className={cardStyle.box}>
-          <div className={cardStyle.status_img}></div>
+          <div className={cardStyle.status_img}>
+            <img src="" alt="" />
+          </div>
           <div className={cardStyle.text_date}>
             <p className={cardStyle.text}>Ош</p>
             <p className={cardStyle.date}>Нету данных</p>
           </div>
         </div>
-        <hr />
+        <hr style={{ margin: "0.375rem 0" }} />
+
         <div className={cardStyle.box}>
-          <div className={cardStyle.status_img}></div>
+          <div className={cardStyle.status_img}>
+            <img src="" alt="" />
+          </div>
           <div className={cardStyle.text_date}>
             <p className={cardStyle.text}>Выдан клиенту</p>
             <p className={cardStyle.date}>Нету данных</p>
