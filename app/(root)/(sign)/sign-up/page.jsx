@@ -20,6 +20,7 @@ export default function SignUp() {
   const [errors, setErrors] = useState({});
   const [options, setOptions] = useState([]);
 
+  // #TODO - обычное получение списка складов, использовал асинхронную функцию для быстрого получение списка складов
   useEffect(() => {
     const fetchStores = async () => {
       try {
@@ -37,6 +38,7 @@ export default function SignUp() {
     fetchStores();
   }, []);
 
+  // #TODO - изменение свойств обьекта при изменение инпута
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
@@ -54,6 +56,7 @@ export default function SignUp() {
     setErrors((prev) => ({ ...prev, store: "" }));
   };
 
+  // #TODO - тут данные который заполняются внутри инпутов
   const validateForm = () => {
     const newErrors = {};
 
@@ -78,6 +81,7 @@ export default function SignUp() {
     return Object.keys(newErrors).length === 0;
   };
 
+  // #TODO - отправление формы при нажатий кнопочки
   const onSubmit = () => {
     if (!validateForm()) return;
 
@@ -112,6 +116,7 @@ export default function SignUp() {
       });
   };
 
+  // #TODO - верстка, там легко <3
   return (
     <div className={Sign.container_sign}>
       <div className={SignUpStyle.logo}>
