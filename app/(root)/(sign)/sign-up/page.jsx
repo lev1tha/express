@@ -8,6 +8,7 @@ import { $api, setToken } from "../../../../axios/api";
 import { useRouter } from "next/navigation";
 
 export default function SignUp() {
+  // Форма для заполнение данных
   const [formData, setFormData] = useState({
     phone: "+996",
     password: "",

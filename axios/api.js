@@ -8,12 +8,18 @@ export const $api = axios.create({
   },
 });
 
-// #TODO - установление тока из запроса и хранение в Cokies а так же localStorage срок хранение 7 дней
+// #TODO - установление тока из запроса и хранение в Cookies а так же localStorage срок хранение 7 дней
 // значение 7 дней можно поменять в свойстве "expires"
 
 export const setToken = (token) => {
   Cookies.set("auth_token", token, { expires: 7 });
   localStorage.setItem("auth_token", token);
+};
+
+// #TODO - удаление токани из localstorage и cookies
+export const removeToken = () => {
+  Cookies.remove("auth_token");
+  localStorage.removeItem("auth_token");
 };
 
 // #TODO - получение токена в запроса и сохрание в Cookies а так же в localStorage на хранение срокам 7 дней
