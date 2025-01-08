@@ -1,10 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Sign from "../sign.module.css";
 import SignUpStyle from "./signup.module.css";
 import Link from "next/link";
 import Selector from "../../../../components/selector/Selector";
-import { $api } from "../../../../axios/api";
+import { $api, setToken } from "../../../../axios/api";
 import { useRouter } from "next/navigation";
 
 export default function SignUp() {
@@ -18,21 +18,24 @@ export default function SignUp() {
 
   const route = useRouter();
   const [errors, setErrors] = useState({});
+  const [options, setOptions] = useState([]);
 
-  const options = [
-    { id: 1, label: "Ош" },
-    { id: 2, label: "Баткен" },
-    { id: 3, label: "Чуй" },
-    { id: 4, label: "Склад Москва" },
-  ];
+  useEffect(() => {
+    const fetchStores = async () => {
+      try {
+        const response = await $api.get("store/");
+        const storeOptions = response.data.map((store) => ({
+          id: store.id,
+          label: store.name,
+        }));
+        setOptions(storeOptions);
+      } catch (error) {
+        console.error("Ошибка при получении списка складов:", error);
+      }
+    };
 
-  const requestStore = async () => {
-    await $api.get("store/").then((responseStore) => {
-      console.log(responseStore.data);
-    });
-  };
-
-  requestStore()
+    fetchStores();
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -81,8 +84,10 @@ export default function SignUp() {
     $api
       .post("auth/register/", formData)
       .then((response) => {
-        if (response.status === 200) {
-          route.push("/"); // Успешная регистрация
+        if (response.status === 200 || response.status === 201) {
+          const { token } = response.data;
+          setToken(token);
+          route.push("/");
         } else {
           alert("Не удалось выполнить регистрацию.");
         }
@@ -134,7 +139,7 @@ export default function SignUp() {
           <Selector
             options={options}
             placeholder="Выберите склад"
-            onSelect={handleSelectorChange} // Возвращает id выбранного склада
+            onSelect={handleSelectorChange}
           />
           {errors.store && (
             <p className={SignUpStyle.error_message}>{errors.store}</p>
