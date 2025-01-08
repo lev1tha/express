@@ -11,7 +11,7 @@ export default function SignUp() {
   const [formData, setFormData] = useState({
     phone: "+996",
     password: "",
-    warehouse: "",
+    store: null,
     nameUser: "",
     surnameUser: "",
   });
@@ -19,7 +19,20 @@ export default function SignUp() {
   const route = useRouter();
   const [errors, setErrors] = useState({});
 
-  const options = ["Ош", "Баткен", "Чуй", "Склад Москва"];
+  const options = [
+    { id: 1, label: "Ош" },
+    { id: 2, label: "Баткен" },
+    { id: 3, label: "Чуй" },
+    { id: 4, label: "Склад Москва" },
+  ];
+
+  const requestStore = async () => {
+    await $api.get("store/").then((responseStore) => {
+      console.log(responseStore.data);
+    });
+  };
+
+  requestStore()
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -33,9 +46,9 @@ export default function SignUp() {
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
-  const handleSelectorChange = (selectedOption) => {
-    setFormData((prev) => ({ ...prev, warehouse: selectedOption }));
-    setErrors((prev) => ({ ...prev, warehouse: "" }));
+  const handleSelectorChange = (selectedId) => {
+    setFormData((prev) => ({ ...prev, store: selectedId }));
+    setErrors((prev) => ({ ...prev, store: "" }));
   };
 
   const validateForm = () => {
@@ -47,8 +60,8 @@ export default function SignUp() {
     if (!formData.password) {
       newErrors.password = "Введите пароль.";
     }
-    if (!formData.warehouse) {
-      newErrors.warehouse = "Выберите склад.";
+    if (!formData.store) {
+      newErrors.store = "Выберите склад.";
     }
     if (!formData.nameUser) {
       newErrors.nameUser = "Введите имя.";
@@ -81,7 +94,7 @@ export default function SignUp() {
 
           Object.keys(serverErrors).forEach((key) => {
             if (Array.isArray(serverErrors[key])) {
-              mappedErrors[key] = serverErrors[key][0]
+              mappedErrors[key] = serverErrors[key][0];
             } else {
               mappedErrors[key] = serverErrors[key];
             }
@@ -121,10 +134,10 @@ export default function SignUp() {
           <Selector
             options={options}
             placeholder="Выберите склад"
-            onSelect={handleSelectorChange}
+            onSelect={handleSelectorChange} // Возвращает id выбранного склада
           />
-          {errors.warehouse && (
-            <p className={SignUpStyle.error_message}>{errors.warehouse}</p>
+          {errors.store && (
+            <p className={SignUpStyle.error_message}>{errors.store}</p>
           )}
         </div>
 

@@ -4,7 +4,7 @@ import styles from "./selector.module.css";
 export default function Selector({
   options,
   placeholder = "Выберите значение",
-  onSelect, 
+  onSelect,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -16,25 +16,25 @@ export default function Selector({
     setIsOpen(false);
 
     if (onSelect) {
-      onSelect(option);
+      onSelect(option.id);
     }
   };
 
   return (
     <div className={styles.selector}>
       <div className={styles.selectorHeader} onClick={toggleDropdown}>
-        {selectedOption ? selectedOption : placeholder}
+        {selectedOption ? selectedOption.label : placeholder}
         <span className={styles.arrow}>{isOpen ? "▲" : "▼"}</span>
       </div>
       {isOpen && (
         <ul className={styles.selectorList}>
-          {options.map((option, index) => (
+          {options.map((option) => (
             <li
-              key={index}
+              key={option.id}
               className={styles.selectorItem}
               onClick={() => selectOption(option)}
             >
-              {option}
+              {option.label}
             </li>
           ))}
         </ul>
