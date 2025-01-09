@@ -1,13 +1,16 @@
 "use client";
 import { useState } from "react";
 import SignInStyle from "./signIn.module.css";
-import Sign from "../sign.module.css"
+import Sign from "../sign.module.css";
 import Link from "next/link";
+import { $api } from "../../../../axios/api";
+import { useRouter, setToken } from "next/navigation";
 
 export default function SignIn() {
-  const [numberUser, setNumberUser] = useState("+996");
-  const [passwordUser, setPasswordUser] = useState("");
-  const [errors, setErrors] = useState({ number: "", password: "" });
+  const [phone, setPhone] = useState("+996");
+  const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState({ phone: "", password: "" });
+  const route = useRouter();
 
   const onNumberChange = (e) => {
     let value = e.target.value;
@@ -16,45 +19,56 @@ export default function SignIn() {
       value = "+996" + value.replace(/^\+996/, "");
     }
 
-    setNumberUser(value);
-    setErrors((prev) => ({ ...prev, number: "" }));
+    setPhone(value);
+    setErrors((prev) => ({ ...prev, phone: "" }));
   };
 
   const onPasswordChange = (e) => {
-    setPasswordUser(e.target.value);
+    setPassword(e.target.value);
     setErrors((prev) => ({ ...prev, password: "" }));
   };
 
-  const onSubmit = () => {
-    let hasErrors = false;
+  const onSubmit = async () => {
+    const validationErrors = {};
 
-    if (!numberUser || numberUser === "+996") {
-      setErrors((prev) => ({ ...prev, number: "Введите номер телефона." }));
-      hasErrors = true;
+    if (!phone || phone === "+996") {
+      validationErrors.phone = "Введите номер телефона.";
     }
 
-    if (!passwordUser) {
-      setErrors((prev) => ({ ...prev, password: "Введите пароль." }));
-      hasErrors = true;
+    if (!password) {
+      validationErrors.password = "Введите пароль.";
     }
 
-    if (hasErrors) return;
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
 
-    // Отправка данных (пример реализации)
-    // Здесь может быть вызов API для отправки данных:
-    // fetch('/api/signin', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ number: numberUser, password: passwordUser }),
-    // })
-    //   .then(response => response.json())
-    //   .then(data => console.log('Ответ сервера:', data))
-    //   .catch(error => console.error('Ошибка:', error));
+    try {
+      const response = await $api.post("auth/login/", { phone, password });
+      if (response.status === 200 || response.status === 201) {
+        setPhone("+996");
+        setPassword("");
+        route.push("/");
 
-    console.log("Номер:", numberUser, "Пароль:", passwordUser);
+        const { token } = response.data;
+        setToken(token);
+      }
+    } catch (error) {
+      if (error.response && error.response.data) {
+        const serverErrors = error.response.data;
 
-    setNumberUser("+996");
-    setPasswordUser("");
+        const mappedErrors = {};
+        if (serverErrors.phone) {
+          mappedErrors.phone = serverErrors.phone[0];
+        }
+        if (serverErrors.password) {
+          mappedErrors.password = serverErrors.password[0];
+        }
+
+        setErrors(mappedErrors);
+      }
+    }
   };
 
   return (
@@ -68,19 +82,19 @@ export default function SignIn() {
           <input
             type="text"
             placeholder="+996"
-            value={numberUser}
+            value={phone}
             onChange={onNumberChange}
           />
-          {errors.number && (
-            <p className={SignInStyle.error_message}>{errors.number}</p>
+          {errors.phone && (
+            <p className={SignInStyle.error_message}>{errors.phone}</p>
           )}
         </div>
-        <div className={SignInStyle.passwordUser}>
+        <div className={SignInStyle.password}>
           <p>Пароль</p>
           <input
             type="password"
-            placeholder="Password"
-            value={passwordUser}
+            placeholder="Введите пароль"
+            value={password}
             onChange={onPasswordChange}
           />
           {errors.password && (
