@@ -5,6 +5,7 @@
   margin: 0;
   box-sizing: border-box;
   /* outline: none; */
+  transition: 0.32s ease-in-out all;
 }
 
 ::-webkit-scrollbar {
@@ -32,6 +33,12 @@ h6 {
 
 body {
   background-color: rgb(229 231 235);
+}
+
+input {
+  font-family: "Nunito Sans", serif;
+  font-size: 18px;
+  font-weight: normal;
 }
 
 ::placeholder {
