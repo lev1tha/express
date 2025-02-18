@@ -7,10 +7,11 @@ import { useRouter } from "next/navigation";
 export default function Header() {
   const route = useRouter();
 
-  const onClickRemove = () => {
-    removeToken();
+  const onClickRemove = async () => {
+    await removeToken();
     route.push("/sign-in");
   };
+
   return (
     <div className={headerStyle.header_layout}>
       <div className={headerStyle.header_inner}>

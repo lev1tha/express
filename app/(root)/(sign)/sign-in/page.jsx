@@ -3,8 +3,8 @@ import { useState } from "react";
 import SignInStyle from "./signIn.module.css";
 import Sign from "../sign.module.css";
 import Link from "next/link";
-import { $api } from "../../../../axios/api";
-import { useRouter, setToken } from "next/navigation";
+import { $api, setToken } from "../../../../axios/api";
+import { useRouter } from "next/navigation";
 
 export default function SignIn() {
   const [phone, setPhone] = useState("+996");
@@ -14,11 +14,9 @@ export default function SignIn() {
 
   const onNumberChange = (e) => {
     let value = e.target.value;
-
     if (!value.startsWith("+996")) {
       value = "+996" + value.replace(/^\+996/, "");
     }
-
     setPhone(value);
     setErrors((prev) => ({ ...prev, phone: "" }));
   };
@@ -30,15 +28,12 @@ export default function SignIn() {
 
   const onSubmit = async () => {
     const validationErrors = {};
-
     if (!phone || phone === "+996") {
       validationErrors.phone = "Введите номер телефона.";
     }
-
     if (!password) {
       validationErrors.password = "Введите пароль.";
     }
-
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
@@ -49,24 +44,18 @@ export default function SignIn() {
       if (response.status === 200 || response.status === 201) {
         setPhone("+996");
         setPassword("");
-        route.push("/");
 
         const { token } = response.data;
-        setToken(token);
+        setToken(token); // Сначала устанавливаем токен
+        route.push("/"); // Затем перенаправляем
       }
     } catch (error) {
       if (error.response && error.response.data) {
         const serverErrors = error.response.data;
-
-        const mappedErrors = {};
-        if (serverErrors.phone) {
-          mappedErrors.phone = serverErrors.phone[0];
-        }
-        if (serverErrors.password) {
-          mappedErrors.password = serverErrors.password[0];
-        }
-
-        setErrors(mappedErrors);
+        setErrors({
+          phone: serverErrors.phone ? serverErrors.phone[0] : "",
+          password: serverErrors.password ? serverErrors.password[0] : "",
+        });
       }
     }
   };
@@ -74,7 +63,11 @@ export default function SignIn() {
   return (
     <div className={Sign.container_sign}>
       <div className={SignInStyle.logo}>
-        <img src="./png/logo.png" alt="Logotype" />
+        <img
+          src="/png/logo.png"
+          alt="Logotype"
+          onError={(e) => (e.target.src = null)}
+        />
       </div>
       <div className={SignInStyle.form}>
         <div className={SignInStyle.numberUser}>

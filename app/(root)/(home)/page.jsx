@@ -1,22 +1,34 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "../../../widgets/header/Header";
 import homeStyle from "./home.module.css";
 import Link from "next/link";
 import Card from "../../../components/card/Card";
 import Footer from "../../../widgets/footer/Footer";
-import { getToken } from "../../../axios/api";
 import { useRouter } from "next/navigation";
-import Modal from "../../../components/modal/Modal"; // Убедитесь, что этот импорт корректен.
+import Modal from "../../../components/modal/Modal";
+import { $api } from "../../../axios/api";
 
 export default function Home() {
   const [stateModal, setStateModal] = useState(false);
+  const [token, setToken] = useState(null);
   const router = useRouter();
-  const token = getToken();
 
-  if (!token) {
-    router.push("/sign-in");
-  }
+  useEffect(() => {
+    const storedToken =
+      typeof window !== "undefined" ? localStorage.getItem("auth_token") : null;
+    setToken(storedToken);
+
+    if (!storedToken) {
+      router.push("/sign-in");
+    }
+  }, [router]);
+
+  useEffect(() => {
+    $api.get("track/").then((request) => {
+      console.log(request.data);
+    });
+  }, []);
 
   const onClickChangeState = () => {
     setStateModal((prev) => !prev);

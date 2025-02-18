@@ -8,32 +8,31 @@ export const $api = axios.create({
   },
 });
 
-// #TODO - установление тока из запроса и хранение в Cookies а так же localStorage срок хранение 7 дней
-// значение 7 дней можно поменять в свойстве "expires"
-
+// Сохранение токена (7 дней)
 export const setToken = (token) => {
-  Cookies.set("auth_token", token, { expires: 7 });
+  Cookies.set("auth_token", token, { expires: 7, path: "/" });
   localStorage.setItem("auth_token", token);
 };
 
-// #TODO - удаление токани из localstorage и cookies
+// Удаление токена
 export const removeToken = () => {
-  Cookies.remove("auth_token");
+  Cookies.remove("auth_token", { path: "/" });
   localStorage.removeItem("auth_token");
 };
 
-// #TODO - получение токена в запроса и сохрание в Cookies а так же в localStorage на хранение срокам 7 дней
-//
+// Получение токена
 export const getToken = () => {
-  return Cookies.get("auth_token") || localStorage.getItem("auth_token");
+  const token = Cookies.get("auth_token") || localStorage.getItem("auth_token");
+  return token ? token : undefined;
 };
 
-// #TODO - перехватчик для установление токена в последуйщих запросах после входа или регистраций
+// Перехватчик запросов (автоматически добавляет токен)
 $api.interceptors.request.use(
   (config) => {
     const token = getToken();
+    console.log(`Твой токен ${token}`);
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers.Authorization = `Token ${token}`;
     }
     return config;
   },
