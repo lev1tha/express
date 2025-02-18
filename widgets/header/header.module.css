@@ -1,0 +1,45 @@
+.header_container {
+  background-color: white;
+  padding: 14px;
+  box-shadow: 0 10px 15px -3px #0000001a, 0 4px 6px -4px #0000001a;
+}
+
+.header_inner {
+  width: 1152px;
+  max-width: 100%;
+  margin: 0 auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo img {
+  width: 116px;
+  border-radius: 0.25rem;
+}
+
+.text {
+  position: relative;
+  margin-right: 24px;
+  font-family: "Nunito Sans", serif;
+}
+
+.text::after {
+  content: "|";
+  font-size: 18px;
+  position: absolute;
+  top: -2;
+  right: -14px;
+  font-family: "Nunito Sans", serif;
+  font-weight: 300;
+}
+
+.exit {
+  font-family: "Nunito Sans", serif;
+  color: rgb(185 28 28);
+  cursor: pointer;
+  font-weight: 500;
+}
+
+/* font-family: "Nunito Sans", serif; */
