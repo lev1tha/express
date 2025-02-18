@@ -1,18 +1,15 @@
-import React from "react";
-import headerStyle from "./header.module.css";
+import React from 'react'
 
 export default function Header() {
+  const route = useRouter();
+
+  const onClickRemove = async () => {
+    await removeToken();
+    route.push("/sign-in");
+  };
+
   return (
-    <div className={headerStyle.header_container}>
-      <div className={headerStyle.header_inner}>
-        <div className={headerStyle.logo}>
-          <img src="./png/logo.png" alt="logotype" />
-        </div>
-        <div className={headerStyle.navigate}>
-          <span className={headerStyle.text}>Bat</span>
-          <span className={headerStyle.exit}>Выход</span>
-        </div>
-      </div>
+    <div className={header.header_layout}>Header
     </div>
   );
 }

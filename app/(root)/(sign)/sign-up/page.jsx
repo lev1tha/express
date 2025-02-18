@@ -1,52 +1,74 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Sign from "../sign.module.css";
 import SignUpStyle from "./signup.module.css";
 import Link from "next/link";
 import Selector from "../../../../components/selector/Selector";
+import { $api, setToken } from "../../../../axios/api";
+import { useRouter } from "next/navigation";
 
 export default function SignUp() {
+  // Форма для заполнение данных
   const [formData, setFormData] = useState({
-    numberUser: "+996",
-    passwordUser: "",
-    warehouse: "",
+    phone: "+996",
+    password: "",
+    store: null,
     nameUser: "",
     surnameUser: "",
   });
 
+  const route = useRouter();
   const [errors, setErrors] = useState({});
+  const [options, setOptions] = useState([]);
 
-  const options = ["Ош", "Баткен", "Чуй", "Склад Москва"];
+  // #TODO - обычное получение списка складов, использовал асинхронную функцию для быстрого получение списка складов
+  useEffect(() => {
+    const fetchStores = async () => {
+      try {
+        const response = await $api.get("store/");
+        const storeOptions = response.data.map((store) => ({
+          id: store.id,
+          label: store.name,
+        }));
+        setOptions(storeOptions);
+      } catch (error) {
+        console.error("Ошибка при получении списка складов:", error);
+      }
+    };
 
+    fetchStores();
+  }, []);
+
+  // #TODO - изменение свойств обьекта при изменение инпута
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
-    // Автоматическая вставка +996 для номера телефона
     const updatedValue =
-      name === "numberUser" && !value.startsWith("+996")
+      name === "phone" && !value.startsWith("+996")
         ? "+996" + value.replace(/^\+996/, "")
         : value;
 
     setFormData((prev) => ({ ...prev, [name]: updatedValue }));
-    setErrors((prev) => ({ ...prev, [name]: "" })); // Убираем ошибку при вводе
+    setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
-  const handleSelectorChange = (selectedOption) => {
-    setFormData((prev) => ({ ...prev, warehouse: selectedOption }));
-    setErrors((prev) => ({ ...prev, warehouse: "" })); // Убираем ошибку при выборе склада
+  const handleSelectorChange = (selectedId) => {
+    setFormData((prev) => ({ ...prev, store: selectedId }));
+    setErrors((prev) => ({ ...prev, store: "" }));
   };
 
+  // #TODO - тут данные который заполняются внутри инпутов
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.numberUser || formData.numberUser === "+996") {
-      newErrors.numberUser = "Введите номер телефона.";
+    if (!formData.phone || formData.phone === "+996") {
+      newErrors.phone = "Введите номер телефона.";
     }
-    if (!formData.passwordUser) {
-      newErrors.passwordUser = "Введите пароль.";
+    if (!formData.password) {
+      newErrors.password = "Введите пароль.";
     }
-    if (!formData.warehouse) {
-      newErrors.warehouse = "Выберите склад.";
+    if (!formData.store) {
+      newErrors.store = "Выберите склад.";
     }
     if (!formData.nameUser) {
       newErrors.nameUser = "Введите имя.";
@@ -57,25 +79,45 @@ export default function SignUp() {
 
     setErrors(newErrors);
 
-    return Object.keys(newErrors).length === 0; // Возвращает true, если нет ошибок
+    return Object.keys(newErrors).length === 0;
   };
 
+  // #TODO - отправление формы при нажатий кнопочки
   const onSubmit = () => {
     if (!validateForm()) return;
 
-    // Пример отправки данных на сервер
-    console.log("Данные формы:", formData);
+    $api
+      .post("auth/register/", formData)
+      .then((response) => {
+        if (response.status === 200 || response.status === 201) {
+          const { token } = response.data;
+          setToken(token);
+          route.push("/");
+        } else {
+          alert("Не удалось выполнить регистрацию.");
+        }
+      })
+      .catch((error) => {
+        if (error.response && error.response.data) {
+          const serverErrors = error.response.data;
+          const mappedErrors = {};
 
-    // Очистка полей после успешной отправки
-    setFormData({
-      numberUser: "+996",
-      passwordUser: "",
-      warehouse: "",
-      nameUser: "",
-      surnameUser: "",
-    });
+          Object.keys(serverErrors).forEach((key) => {
+            if (Array.isArray(serverErrors[key])) {
+              mappedErrors[key] = serverErrors[key][0];
+            } else {
+              mappedErrors[key] = serverErrors[key];
+            }
+          });
+
+          setErrors(mappedErrors);
+        } else {
+          alert("Произошла ошибка при отправке данных.");
+        }
+      });
   };
 
+  // #TODO - верстка, там легко <3
   return (
     <div className={Sign.container_sign}>
       <div className={SignUpStyle.logo}>
@@ -87,13 +129,13 @@ export default function SignUp() {
           <p>Номер</p>
           <input
             type="text"
-            name="numberUser"
+            name="phone"
             placeholder="+996"
-            value={formData.numberUser}
+            value={formData.phone}
             onChange={handleInputChange}
           />
-          {errors.numberUser && (
-            <p className={SignUpStyle.error_message}>{errors.numberUser}</p>
+          {errors.phone && (
+            <p className={SignUpStyle.error_message}>{errors.phone}</p>
           )}
         </div>
 
@@ -105,8 +147,8 @@ export default function SignUp() {
             placeholder="Выберите склад"
             onSelect={handleSelectorChange}
           />
-          {errors.warehouse && (
-            <p className={SignUpStyle.error_message}>{errors.warehouse}</p>
+          {errors.store && (
+            <p className={SignUpStyle.error_message}>{errors.store}</p>
           )}
         </div>
 
@@ -145,13 +187,13 @@ export default function SignUp() {
           <p>Пароль</p>
           <input
             type="password"
-            name="passwordUser"
+            name="password"
             placeholder="Введите пароль"
-            value={formData.passwordUser}
+            value={formData.password}
             onChange={handleInputChange}
           />
-          {errors.passwordUser && (
-            <p className={SignUpStyle.error_message}>{errors.passwordUser}</p>
+          {errors.password && (
+            <p className={SignUpStyle.error_message}>{errors.password}</p>
           )}
         </div>
 
