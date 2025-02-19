@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
-import Sign from "../sign.module.css";
 import SignUpStyle from "./signup.module.css";
+import Sign from "../sign.module.css";
 import Link from "next/link";
 import Selector from "../../../../components/selector/Selector";
 import { $api, setToken } from "../../../../axios/api";

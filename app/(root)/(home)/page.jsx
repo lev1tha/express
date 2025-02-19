@@ -14,6 +14,16 @@ export default function Home() {
   const [token, setToken] = useState(null);
   const router = useRouter();
 
+  useEffect(
+    () => {
+      $api.get("track/").then((response) => {
+        console.log(response.data);
+      });
+    },
+    [],
+    10000
+  );
+
   useEffect(() => {
     const storedToken =
       typeof window !== "undefined" ? localStorage.getItem("auth_token") : null;

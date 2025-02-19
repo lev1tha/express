@@ -82,7 +82,7 @@ export default function SignIn() {
             <p className={SignInStyle.error_message}>{errors.phone}</p>
           )}
         </div>
-        <div className={SignInStyle.password}>
+        <div className={SignInStyle.passwordUser}>
           <p>Пароль</p>
           <input
             type="password"

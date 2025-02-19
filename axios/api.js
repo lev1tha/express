@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 export const $api = axios.create({
-  baseURL: "https://cargo-wsdy.onrender.com/api/v1/",
+  baseURL: "http://cargoback.bwheel.ru/api/v1/",
   headers: {
     "Content-Type": "application/json",
   },
